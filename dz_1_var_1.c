@@ -14,6 +14,11 @@ int main(void) {
 		return 0;
 	}
 
+	if (num < 0) {
+		printf("Error: The entered number less than zero!\n");
+		return 0;
+	}
+
 	a = num;
 
 	while (a != 1){					//считаем кол-во битов
