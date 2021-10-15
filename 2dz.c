@@ -2,31 +2,28 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <locale.h>
-#include <string.h>
 
 int main(void) {
-	system("chcp 1251");
 
-	char c;													//переменная для заполнение массива
-	int str = 1, col = 0;									//для посчёта столбцов и строк
-	int between;											//для записывание количества столбоц в цикле подсчёта
-	int** arr;												//двухмерный массив
-	int rows = 0, colum = 0;								//столбцы и строки для запонения двухмерного массива без пробелов
-	int chack = 0;											//переменная для доп проверки при заполнении файла .gv
-	int mult;												//промежуточная переменная для случая если ребро является петлёй
-	int* con;												//массив для проверки на связанность графа
-	int com = 0;											//переменная для проверки связанных вершин
+	char c;													//variable for filling the array
+	int str = 1, col = 0;									//to count columns and rows
+	int between;											//to record the number of columns in a counting cycle
+	int** arr;												//two-dimensional array
+	int rows = 0, colum = 0;								//columns and rows to fill a two-dimensional array with no spaces
+	int chack = 0;											//variable for additional checking when filling the .gv file
+	int mult;												//intermediate variable for the case if the edge is a loop
+	int* con;												//array for checking the connectivity of the graph
+	int com = 0;											//variable for checking connected vertices
 
 	FILE* fin = NULL;
 
-	fin = fopen("2dz.txt", "r");							//открывание файла в режиме ride
-	if (!fin) {												//проверка: открыляс ли файл
+	fin = fopen("2dz.txt", "r");							//opening a file in ride mode
+	if (!fin) {												//check: whether the file is open
 		printf("Error!\n");
 		return 0;
 	}
 	else {
-		while ((c = fgetc(fin)) != EOF) {					//подсчёт строк и столбцов
+		while ((c = fgetc(fin)) != EOF) {					//counting rows and columns
 			if (c != ' ' && c != '\n') {
 				col++;
 			}
@@ -37,22 +34,22 @@ int main(void) {
 			}
 		}
 
-		rewind(fin);										//чтения файла сначала
+		rewind(fin);										//read the file first
 
-		arr = (int**)calloc(str, sizeof(int*));				//выделение динамической памяти с иницилизацией массива
+		arr = (int**)calloc(str, sizeof(int*));				//dynamic memory allocation with array initialization
 
-		if (arr == NULL) {									//проверка: выделилось достаточно памяти
+		if (arr == NULL) {									//check: enough memory allocated
 			exit(1);
 		}
 
 		for (int i = 0; i < str; i++) {
-			arr[i] = (int*)calloc(between, sizeof(int));	//выделение динамической памяти с иницилизацией массива
+			arr[i] = (int*)calloc(between, sizeof(int));	//dynamic memory allocation with array initialization
 			if (arr[i] == NULL) {
 				exit(1);
 			}
 		}
 
-		while ((c = fgetc(fin)) != EOF) {					//заполнение двухмерного массива исключая пробелы
+		while ((c = fgetc(fin)) != EOF) {					//filling a two-dimensional array excluding spaces
 			if (!isspace(c)) {
 				arr[rows][colum] = c - '0';
 				colum++;
@@ -63,7 +60,7 @@ int main(void) {
 			}
 		}
 
-		for (int i = 0; i < str; i++) {						//выведение двухмерного массива для пользователя
+		for (int i = 0; i < str; i++) {						//outputting a two-dimensional array to the user
 			for (int j = 0; j < between; j++) {
 				printf("%d\t", arr[i][j]);
 			}
@@ -71,16 +68,16 @@ int main(void) {
 		}
 	}
 
-	fclose(fin);											//закрывание файла
+	fclose(fin);											//closing the file
 
-	fin = fopen("2dz_answer.gv", "w");						//открывание файла в режиме write
+	fin = fopen("2dz_answer.gv", "w");						//opening a file in write mode
 
 	if (!fin) {
 		printf("Error!\n");
 		return 0;
 	}
 
-	fprintf(fin, "%s", "graph gr {\n");						//заполнение файла
+	fprintf(fin, "%s", "graph gr {\n");						//filling in the file
 
 	for (int j = 0; j < between; j++) {
 		for (int i = 0; i < str; i++) {
@@ -108,19 +105,19 @@ int main(void) {
 
 	fclose(fin);
 
-	fin = fopen("2dz_answer.gv", "r");						//открывание файла в режиме ride
+	fin = fopen("2dz_answer.gv", "r");						//opening a file in ride mode
 
 	if (!fin) {
 		printf("Error!\n");
 		return 0;
 	}
 
-	con = (int*)calloc(str, sizeof(int));					//выделение динамической памяти с инициализацией массива
+	con = (int*)calloc(str, sizeof(int));					//dynamic memory allocation with array initialization
 	if (con == NULL) {
 		exit(1);
 	}
 
-	con[0] = 1;												//проверка графа на связанность
+	con[0] = 1;												//checking the graph for connectivity
 
 	for (int i = 0; i < str; i++) {
 		if (con[i] == 1) {
@@ -146,10 +143,10 @@ int main(void) {
 
 	fclose(fin);
 
-	system("dot -Tpng 2dz_answer.gv -o 'answer.png'");		//передача команды командной строке для визуализации графа в среде grathviz
+	system("dot -Tpng 2dz_answer.gv -o 'answer.png'");		//passing a command to the command line to render the graph in the grathviz environment
 	system("wslview answer.png");
 
-	for (int i = 0; i < str; i++) {							//освобожнение ранее выделенной памяти
+	for (int i = 0; i < str; i++) {							//freeing previously allocated memory
 		free(arr[i]);
 	}
 	free(arr);
